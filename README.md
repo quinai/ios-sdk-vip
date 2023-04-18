@@ -1,2 +1,2 @@
-# ios-sdk-vip
-VIP Repo of iOS SDK
+# ios-sdk-wip
+WIP Repo of iOS SDK
