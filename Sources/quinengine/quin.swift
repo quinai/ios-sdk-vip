@@ -16,11 +16,10 @@ public struct Quin {
     }
     
     public func setUser(googleClientId: String) {
-        let user = self.user()
-        _ = user?.withGoogleClientId(googleClientId: googleClientId)
+        _ = self.user()
     }
     
-    public func track(event: Event, completion:@escaping ActionHandler){
+    public func track(event: Event, path: String = "event", completion:@escaping ActionHandler){
         guard let user = self.user() else{
             Logger.sharedInstance.log(msg:"quin track: user is nil")
             return
@@ -30,34 +29,18 @@ public struct Quin {
             Logger.sharedInstance.log(msg:"quin track: encode error")
             return
         }
-        Http.sharedInstance.post(path: Quin.pathEvent, body: httpBody){
+        Http.sharedInstance.post(path: path, body: httpBody){
             response in saveUser(response: response)
             completion(response?.content?.interaction)
         }
     }
     
-    public func test(event: Event, completion:@escaping ActionHandler){
-        guard let user = self.user() else{
-            Logger.sharedInstance.log(msg:"quin track: user is nil")
-            return
-        }
-        let req = event.setUser(user:user)
-        guard let httpBody = try? JSONEncoder().encode(req) else {
-            Logger.sharedInstance.log(msg:"quin track: encode error")
-            return
-        }
-        Http.sharedInstance.post(path: Quin.pathTestEvent, body: httpBody){
-            response in saveUser(response: response)
-            completion(response?.content?.interaction)
-        }
-    }
-    
-    func user() -> User? {
+    func user(googleClientId: String? = nil) -> User? {
         let user = UserStore.sharedInstance.load()
         if user == nil {
             let semaphore = DispatchSemaphore(value: 0)
             Http.sharedInstance.post(path: Quin.pathSession, body: nil){
-                response in saveUser(response: response)
+                response in saveUser(response: response, googleClientId: googleClientId)
                 semaphore.signal()
             }
             semaphore.wait()
@@ -65,12 +48,16 @@ public struct Quin {
         return UserStore.sharedInstance.load()
     }
     
-    func saveUser(response:Response?) {
+    func saveUser(response:Response?, googleClientId: String? = nil) {
         guard let user = response?.content?.user() else{
             Logger.sharedInstance.log(msg:"quin saveUser: response user is nil")
             return
         }
-        UserStore.sharedInstance.save(user: user)
+        var modifiedUser = user
+        if googleClientId != nil {
+           modifiedUser = user.withGoogleClientId(googleClientId: googleClientId!)
+        }
+        UserStore.sharedInstance.save(user: modifiedUser)
     }
 }
 
@@ -79,6 +66,7 @@ extension Quin{
 }
 
 public protocol eCommerce{
+    func sendTestEvent(completion:@escaping ActionHandler)
     func sendPageViewHomeEvent(completion:@escaping ActionHandler)
     func sendPageViewListingEvent(label:String, completion:@escaping ActionHandler)
     func sendAddToCartListingEvent(item:Item, quantity: Int, completion:@escaping ActionHandler)
@@ -108,6 +96,9 @@ internal class eCommerceImpl: eCommerce{
     private let instance: Quin
     init(instance: Quin) {
         self.instance = instance
+    }
+    public func sendTestEvent(completion:@escaping ActionHandler){
+        instance.track(event: Event.eCommerce.pageViewHomeEvent(), path: Quin.pathTestEvent, completion: completion)
     }
     public func sendPageViewHomeEvent(completion:@escaping ActionHandler){
         instance.track(event: Event.eCommerce.pageViewHomeEvent(), completion: completion)
