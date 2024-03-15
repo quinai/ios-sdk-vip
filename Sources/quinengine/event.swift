@@ -207,7 +207,7 @@ internal class eCommerceEventImpl : eCommerceEvent {
                      action: "\(EventAction.click)",
                      label: "\(EventLabel.paymenttype)")
     }
-    func purchaseCompletedEvent(totalBasketSize: Int) -> Event{
+    func purchaseCompletedEvent(totalBasketSize: Float) -> Event{
         return Event(category:"\(EventCategory.checkout)",
                      action: "\(EventAction.click)",
                      label: "\(EventLabel.purchasecompleted)")
@@ -245,6 +245,6 @@ public protocol eCommerceEvent{
     func deliveryFeeEvent() -> Event
     func adressEvent() -> Event
     func paymentTypeEvent() -> Event
-    func purchaseCompletedEvent(totalBasketSize: Int) -> Event
+    func purchaseCompletedEvent(totalBasketSize: Float) -> Event
     func addToCartServiceEvent(item: Item, quantity: Int) -> Event
 }

@@ -88,7 +88,7 @@ public protocol eCommerce{
     func sendDeliveryFeeEvent(completion:@escaping ActionHandler)
     func sendAdressEvent(completion:@escaping ActionHandler)
     func sendPaymentTypeEvent(completion:@escaping ActionHandler)
-    func sendPurchaseCompletedEvent(totalBasketSize:Int, completion:@escaping ActionHandler)
+    func sendPurchaseCompletedEvent(totalBasketSize:Float, completion:@escaping ActionHandler)
     func sendAddToCartServiceEvent(item:Item, quantity: Int, completion:@escaping ActionHandler)
 }
 
@@ -163,7 +163,7 @@ internal class eCommerceImpl: eCommerce{
     public func sendPaymentTypeEvent(completion:@escaping ActionHandler){
         instance.track(event: Event.eCommerce.paymentTypeEvent(), completion: completion)
     }
-    public func sendPurchaseCompletedEvent(totalBasketSize:Int, completion:@escaping ActionHandler){
+    public func sendPurchaseCompletedEvent(totalBasketSize:Float, completion:@escaping ActionHandler){
         instance.track(event: Event.eCommerce.purchaseCompletedEvent(totalBasketSize: totalBasketSize), completion: completion)
     }
     public func sendAddToCartServiceEvent(item:Item, quantity: Int, completion:@escaping ActionHandler){
