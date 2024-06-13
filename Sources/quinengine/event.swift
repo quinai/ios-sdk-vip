@@ -91,10 +91,10 @@ internal class eCommerceEventImpl : eCommerceEvent {
         return Event(category:"\(EventCategory.home)",
                 action: "\(EventAction.pageview)")
     }
-    func pageViewListingEvent(label:String) -> Event{
+    func pageViewListingEvent(label:String, categoryId: String) -> Event{
         return Event(category:"\(EventCategory.listing)",
                      action: "\(EventAction.pageview)",
-                     label: label)
+                     label: label).withCustomAttribute(key: "categoryId", value: categoryId)
     }
     func addToCartListingEvent(item: Item, quantity: Int) -> Event{
         return Event(category:"\(EventCategory.listing)",
@@ -111,7 +111,7 @@ internal class eCommerceEventImpl : eCommerceEvent {
         return Event(category:"\(EventCategory.detail)",
                      action: "\(EventAction.pageview)",
                      label: item.getCategory(),
-                     item: item)
+                     item: item).withCustomAttribute(key: "categoryId", value: item.getCategoryId())
     }
     func addToCartDetailEvent(item: Item, quantity: Int) -> Event{
         return Event(category:"\(EventCategory.detail)",
@@ -224,7 +224,7 @@ internal class eCommerceEventImpl : eCommerceEvent {
 
 public protocol eCommerceEvent{
     func pageViewHomeEvent() -> Event
-    func pageViewListingEvent(label:String) -> Event
+    func pageViewListingEvent(label:String, categoryId: String) -> Event
     func addToCartListingEvent(item: Item, quantity: Int) -> Event
     func filterEvent() -> Event
     func pageViewDetailEvent(item: Item) -> Event
