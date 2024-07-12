@@ -54,6 +54,7 @@ Item {
  id: String,
  name: String,
  category: String,
+ categoryId: String,
  price: Decimal,
  currency: String,
 }
@@ -65,6 +66,7 @@ Here is an example of Item creation.
 Item(id: "1250353863",
  name: "wooden chair",
  category: "Garden",
+ categoryId: "1002"
  price: 39.99,
  currency: "USD"
 ```
@@ -78,6 +80,7 @@ Action {
    actionId: String?
    actionType: String?
    category: String?
+   categoryId: String?
    promotionCode: String?
    custom: Boolean?
    display: Display?
