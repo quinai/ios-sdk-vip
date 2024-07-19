@@ -54,6 +54,7 @@ Item {
  id: String,
  name: String,
  category: String,
+ categoryId: String,
  price: Decimal,
  currency: String,
 }
@@ -65,6 +66,7 @@ Here is an example of Item creation.
 Item(id: "1250353863",
  name: "wooden chair",
  category: "Garden",
+ categoryId: "1002"
  price: 39.99,
  currency: "USD"
 ```
@@ -78,6 +80,7 @@ Action {
    actionId: String?
    actionType: String?
    category: String?
+   categoryId: String?
    promotionCode: String?
    custom: Boolean?
    display: Display?
@@ -141,6 +144,7 @@ Functions that send predefined events by Quin SDK are listed below.
 ```swift
 sendPageViewHomeEvent(completion:@escaping ActionHandler)
 sendPageViewListingEvent(label: String, completion:@escaping ActionHandler)
+sendPageViewListingWithCategoryIdEvent(label:String, categoryId: String, completion:@escaping ActionHandler)
 sendAddToCartListingEvent(item: Item?, quantity: Int, completion:@escaping ActionHandler)
 sendFilterEvent(completion:@escaping ActionHandler)
 sendPageViewDetailEvent(item: Item?, completion:@escaping ActionHandler)
@@ -179,6 +183,7 @@ In order to send custom events first you need to create event to be sent. We hav
 ```swift
 pageViewHomeEvent()
 pageViewListingEvent(label: String)
+pageViewListingWithCategoryIdEvent(label:String, categoryId: String)
 addToCartListingEvent(item: Item?, quantity: Int)
 filterEvent()
 pageViewDetailEvent(item: Item)
@@ -234,7 +239,7 @@ Quin.track(event = event) { action in
 If those functions does not satisfy your use cases, you can create custom events and send them to Quin services again using track function. Following example demonstrates how to create custom events and send it. 
 
 ```swift
-let item = Item("id", "name", "cat", 5.00, "usd")
+let item = Item("id", "name", "cat","cat-id", 5.00, "usd")
 let event = Event(category : "\(EventCategory.home)",
                   action : "\(EventAction.click)", 
                   label : "custom label", 
@@ -257,6 +262,7 @@ Action: {
     actionId:      "d3da1e3c5b1f8159",
     actionType:    "upsell",
     category:      "Garden > Storage > Storage Wardrobe",
+    categoryId:    "10051-54541"
     promotionCode: "QTK1-4RSS-RR38-FTGR",
     custom:        false,
     display: {
@@ -312,6 +318,7 @@ let item = Item(
     id : "testId",
     name : "testName",
     category : "testCategory",
+    categoryId: "test-category-id"
     price : 93.8,
     currency : "TRY")
 val event = Event(

@@ -14,6 +14,7 @@ public struct Action: Decodable {
     public let actionId: String?
     public let actionType:String?
     public let category: String?
+    public let categoryId: String?
     public let promotionCode: String?
     public let custom: Bool?
     public let display: Display?

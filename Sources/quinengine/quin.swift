@@ -68,7 +68,8 @@ extension Quin{
 public protocol eCommerce{
     func sendTestEvent(completion:@escaping ActionHandler)
     func sendPageViewHomeEvent(completion:@escaping ActionHandler)
-    func sendPageViewListingEvent(label:String, completion:@escaping ActionHandler)
+    func sendPageViewListingEvent(label:String,completion:@escaping ActionHandler)
+    func sendPageViewListingWithCategoryIdEvent(label:String, categoryId: String, completion:@escaping ActionHandler)
     func sendAddToCartListingEvent(item:Item, quantity: Int, completion:@escaping ActionHandler)
     func sendFilterEvent(completion:@escaping ActionHandler)
     func sendPageViewDetailEvent(item:Item, completion:@escaping ActionHandler)
@@ -105,6 +106,9 @@ internal class eCommerceImpl: eCommerce{
     }
     public func sendPageViewListingEvent(label:String, completion:@escaping ActionHandler){
         instance.track(event: Event.eCommerce.pageViewListingEvent(label: label), completion: completion)
+    }
+    public func sendPageViewListingWithCategoryIdEvent(label:String, categoryId:String, completion:@escaping ActionHandler){
+        instance.track(event: Event.eCommerce.pageViewListingWithCategoryIdEvent(label: label, categoryId: categoryId), completion: completion)
     }
     public func sendAddToCartListingEvent(item:Item, quantity: Int, completion:@escaping ActionHandler){
         instance.track(event: Event.eCommerce.addToCartListingEvent(item: item, quantity: quantity), completion: completion)
